@@ -1,5 +1,5 @@
 // db.config.js
-const mongoose = require("mongoose"); //importar o mongoose
+import mongoose from "mongoose";
 
 //criar uma função async chamada: connect
 async function connect() {
@@ -12,4 +12,4 @@ async function connect() {
   }
 }
 
-module.exports = connect;
+export default connect;
