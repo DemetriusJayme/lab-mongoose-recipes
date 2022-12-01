@@ -1,0 +1,12 @@
+mongodb://localhost:27017
+
+Inserindo o primeiro user
+
+{
+    "username": "demetrius",
+    "bio": "bla bla bla",
+    "age": 48,
+    "e-mail": "demetriusjayme@gmail.com",
+    "isChef": "true",
+    "recipes": "6387b86fb8bb0f9d1bb8c264"
+  }

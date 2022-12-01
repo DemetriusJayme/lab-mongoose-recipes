@@ -19,7 +19,6 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       lowercase: true,
-      match: /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/,
     },
     isChef: {
       type: Boolean,
