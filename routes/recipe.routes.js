@@ -4,22 +4,31 @@ import RecipeModel from "../models/recipe.model.js";
 
 const recipeRoute = express.Router();
 
-//Create - MongoDB
+//Post - MongoDB - /create
 recipeRoute.post("/create", async (req, res) => {
   try {
-    const form = req.body;
+    const { idUser } = req.params;
 
-    //quer criar um documento dentro da sua collection -> .create()
-    const newRecipe = await RecipeModel.create(form);
+    const newRecipe = await RecipeModel.create({ ...req.body, user: idUser });
+
+    const userUpdated = await UserModel.findByIdAndUpdate(
+      idUser,
+      {
+        $push: {
+          recipes: newRecipe._id,
+        },
+      },
+      { new: true, runValidators: true }
+    );
 
     return res.status(201).json(newRecipe);
   } catch (error) {
-    console.log(error.errors);
-    return res.status(500).json(error.errors);
+    console.log(error);
+    return res.status(400).json(error.errors);
   }
 });
 
-//InsertMany - MongoDB
+//Post - MongoDB - /insertmany
 recipeRoute.post("/insertmany", async (req, res) => {
   try {
     const form = req.body;
@@ -34,27 +43,33 @@ recipeRoute.post("/insertmany", async (req, res) => {
   }
 });
 
-//Delete - MongoDB
+//Delete - MongoDB - /delete/:id
 recipeRoute.delete("/delete/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { idUser } = req.params;
 
-    const deletedRecipe = await RecipeModel.findByIdAndDelete(id);
+    //deletei a tarefa
+    const deletedUser = await UserModel.findByIdAndDelete(idUser);
 
-    if (!deletedRecipe) {
-      return res.status(400).json({ msg: "Receita não encontrada!" });
-    }
+    //retirei o id da tarega de dentro da minha array TASKS
+    await UserModel.findByIdAndUpdate(
+      deletedTask.user,
+      {
+        $pull: {
+          recipes: idUser,
+        },
+      },
+      { new: true, runValidators: true }
+    );
 
-    const Recipes = await RecipeModel.find();
-
-    return res.status(200).json(Recipes);
+    return res.status(200).json(deletedUser);
   } catch (error) {
     console.log(error);
-    return res.status(500).json(error.errors);
+    return res.status(400).json(error.errors);
   }
 });
 
-//Edit - MongoDB
+//Put - MongoDB - /edit/:id
 recipeRoute.put("/edit/:id", async (req, res) => {
   try {
     const { id } = req.params;
